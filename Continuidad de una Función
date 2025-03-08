@@ -1,0 +1,94 @@
+%----- Asignatura:      Programación orientada al calculo científico -----%  
+% ----------------------------------------------------------------------- %
+% ---------------------- CONTINUIDAD DE FUNCIONES ----------------------- %
+% ----------------------------------------------------------------------- %
+
+% --- f(x) = x + log (x) si x > 1
+%          = x^2         si x <= 1 
+% --- Determinar si la función es continua en el rango [-1, 2]
+clc;
+clear;
+
+x = -10: 0.1: 10;
+n = width(x);
+
+for i = 1 : 1 : n
+    if x(i) <= 1
+        y(i) = x(i)^2;
+    else
+        y(i) = x(i) + log(x(i));
+    end
+
+end
+
+% --- f(x) es continua en a, si y sólo si se cumplen las siguientes condiciones:
+% --- 1) La función existe en a.
+% --- 2) La función tiene límite cuando x tiende a: a.
+% --- 3) El valor de la función en el punto a y el límite tendiendo a: a, son iguales
+
+% --- Prueba condición 1)
+a = 1;
+aux_1 = y(a);
+% --- Prueba condición 2)
+syms aux_2 aux_3 v
+aux_2 = v^2;
+aux_3 = v + log(v);
+lim_1 = limit(aux_2, v, a,"left");      % Límite cuando v tiende a: a, desde la izq
+lim_2 = limit(aux_3, v, a,"right");     % Límite cuando v tiende a: a, desde la der
+% --- Prueba condición 3)
+if a == lim_1 && a == lim_2
+    fprintf('Resultado del EJEMPLO 1\n');
+    fprintf('\tLa función f(x) es continua en: %8d\n', a);
+else
+    fprintf('Resultado del EJEMPLO 1\n');
+    fprintf('\tLa función f(x) es discontinua en: %8d\n', a);
+end
+
+% --- Cálculos para definir la escala del eje de las ordenadas (y)
+y_max = max(y);
+y_min = min(y);
+
+% --- Grafica de la función f(x)
+figure(1);
+plot(x,y,"LineStyle","-","Color","r",LineWidth=2);    
+xlabel('\bfx');
+ylabel('\bff(x)');
+axis([-11 11 (y_min-10) (y_max+10)]);
+grid on;
+
+%--------------------------------------
+% --- Función cotangente inversa (acot)
+%--------------------------------------
+figure(2);
+subplot(2,1,1);
+x0 = -2*pi:pi/30:2*pi;
+plot(x0,acot(x0),'r')
+grid on
+
+% --- Plot the inverse cotangent function over the 
+% --- intervals −2π≤x<0 and 0<x≤2π
+
+% --- Respuesta a la consulta sobre la gráfica de esta función
+% --- trigonométrica: crear dos rangos separados en vectores x1 y x2
+figure(2);
+subplot(2,1,2);
+x1 = -2*pi:pi/30:-0.1;
+x2 = 0.1:pi/30:2*pi;
+plot(x1,acot(x1),'b')
+hold on
+plot(x2,acot(x2),'b')
+hold off
+grid on
+
+syms x y
+y  = acot(x);
+res1 = limit(y,x,0,"left");
+res2 = limit(y,x,0,"right");
+
+% --- El operador de formato %s permite visulizar 3.1416 como pi; o en
+% --- general, lo ángulos como multiplos o fracciones de pi
+fprintf('\n');
+fprintf('Resultado del EJEMPLO 2\n');
+fprintf('\tEl límite de la función cotangente inversa cuando a = 0 (izq) es: %s\n', res1);
+fprintf('\tEl límite de la función cotangente inversa cuando a = 0 (der) es: %s\n:', res2);
+fprintf('\tLa función cotangente inversa es discontinua en: %d\n', 0);
